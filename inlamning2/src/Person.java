@@ -3,10 +3,10 @@ import java.time.LocalDate;
 public class Person {
 
     private String name;
-    private int pNumber;
+    private long pNumber;
     private LocalDate membershipDate;
 
-    public Person(String name, int pNumber, LocalDate membershipDate) {
+    public Person(String name, long pNumber, LocalDate membershipDate) {
         this.name = name;
         this.pNumber = pNumber;
         this.membershipDate = membershipDate;
@@ -16,7 +16,7 @@ public class Person {
         return name;
     }
 
-    public int getpNumber() {
+    public long getpNumber() {
         return pNumber;
     }
 
