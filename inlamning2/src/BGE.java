@@ -1,7 +1,5 @@
-import static org.junit.jupiter.api.DynamicContainer.dynamicContainer;
 
 import java.io.BufferedReader;
-import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
@@ -20,9 +18,7 @@ public class BGE {
 
     public BGE() {
         readFile();
-        runScanner();
-        System.out.println("\nTryck på enter för att skriva in en ny medlem");
-        sc.nextLine();
+        //runScanner();
     }
 
     public BGE(String name) {
@@ -62,24 +58,24 @@ public class BGE {
         System.out.println("\033[H\033[2J");
         System.out.println("Välkommen till BGE:s medlemsregister");
         System.out.print("Vem söker du efter: ");
-
         String person = sc.nextLine();
         System.out.println("\033[H\033[2J");
         searchPerson(person);
-
+        System.out.println("\nTryck på enter för att skriva in en ny medlem");
+        sc.nextLine();
         
     }
 
     }
 
     public void readFile(){
-
         try {
             FileReader fr = new FileReader("./src/data.txt");
             br = new BufferedReader(fr);
 
         } catch (FileNotFoundException e) {
             System.out.println("File not found");
+            return;
         }
 
         String line;
@@ -108,20 +104,21 @@ public class BGE {
 
     public boolean searchPerson(String person){
         boolean found = false;
+        person = person.trim();
 
         for (Person p : members) {
-            if (person.equals(p.getName()) || person.equals(String.valueOf(p.getpNumber()))) {
+            if (person.equalsIgnoreCase(p.getName().trim()) || person.equals(String.valueOf(p.getpNumber()))) {
                 if (p.getDate().isAfter(todayDate.minus(1, java.time.temporal.ChronoUnit.YEARS))) {
                     System.out.println(p.getName() + " är en nuvarande medlem");
                     //ptPrint(p);
-                } else if (!p.getDate().isAfter(todayDate.minus(1, java.time.temporal.ChronoUnit.YEARS))) {
+                } else {
                     System.out.println(p.getName() + " är en före detta kund");
                 }
                 found = true;
             }
         }
         if (!found) {
-            System.out.println("Personen inte finns i filen och har sålunda aldrig varit medlem och är obehörig.");
+            System.out.println("Personen finns inte i filen och har sålunda aldrig varit medlem och är obehörig.");
         }
 
 
