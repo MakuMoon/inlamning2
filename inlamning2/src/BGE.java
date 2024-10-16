@@ -4,9 +4,12 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.time.LocalDateTime;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Scanner;
+import java.time.format.DateTimeFormatter;
+
 
 public class BGE {
 
@@ -14,11 +17,12 @@ public class BGE {
     private ArrayList<Person> members = new ArrayList<Person>();
     private Scanner sc = new Scanner(System.in);
     private LocalDate todayDate = LocalDate.now();
+    private LocalDateTime todayDateTime = LocalDateTime.now();
     private Boolean testFound;
 
     public BGE() {
         readFile();
-        //runScanner();
+        runScanner();
     }
 
     public BGE(String name) {
@@ -70,7 +74,7 @@ public class BGE {
 
     public void readFile(){
         try {
-            FileReader fr = new FileReader("./src/data.txt");
+            FileReader fr = new FileReader("./inlamning2/src/data.txt");
             br = new BufferedReader(fr);
 
         } catch (FileNotFoundException e) {
@@ -109,15 +113,18 @@ public class BGE {
         for (Person p : members) {
             if (person.equalsIgnoreCase(p.getName().trim()) || person.equals(String.valueOf(p.getpNumber()))) {
                 if (p.getDate().isAfter(todayDate.minus(1, java.time.temporal.ChronoUnit.YEARS))) {
+                    System.out.println("(kund)");
                     System.out.println(p.getName() + " är en nuvarande medlem");
-                    //ptPrint(p);
+                    ptPrint(p);
                 } else {
+                    System.out.println("(fd. kund)");
                     System.out.println(p.getName() + " är en före detta kund");
                 }
                 found = true;
             }
         }
         if (!found) {
+            System.out.println("(obehörig)");
             System.out.println("Personen finns inte i filen och har sålunda aldrig varit medlem och är obehörig.");
         }
 
@@ -125,9 +132,14 @@ public class BGE {
         return found;
     }
 
-    public void ptPrint(Person p) throws IOException{
-        FileWriter fw = new FileWriter("./src/ptData.txt");
-        fw.write(p.getName() + ", " + p.getpNumber() + ", " + p.getDate());
+    public void ptPrint(Person p) {
+        try {
+            FileWriter fw = new FileWriter("./inlamning2/src/ptData.txt", true);
+            fw.write(p.getName() + ", " + p.getpNumber() + ", " + todayDateTime.format(DateTimeFormatter.ofPattern("HH:mm yyyy-MM-dd")) + "\n");
+            fw.close();
+        } catch (IOException e) {
+            System.out.println("Error writing to file");
+        }
     }
 
 }
