@@ -1,3 +1,5 @@
+//Git repo
+//https://github.com/MakuMoon/inlamning2
 
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;
@@ -19,6 +21,8 @@ public class BGE {
     private LocalDate todayDate = LocalDate.now();
     private LocalDateTime todayDateTime = LocalDateTime.now();
     private Boolean testFound;
+    private String testLatestAuthorized = null;
+    private String testExeptions = null;
 
     public BGE() {
         readFile();
@@ -41,6 +45,14 @@ public class BGE {
 
     public boolean getTestFound() {
         return testFound;
+    }
+
+    public String getTestLatestAuthority(){
+        return testLatestAuthorized;
+    }
+
+    public String getTestExeptions(){
+        return testExeptions;
     }
 
     public ArrayList<Person> getMembers() {
@@ -74,10 +86,11 @@ public class BGE {
 
     public void readFile(){
         try {
-            FileReader fr = new FileReader("./inlamning2/src/data.txt");
+            FileReader fr = new FileReader("./src/data.txt");
             br = new BufferedReader(fr);
 
         } catch (FileNotFoundException e) {
+            testExeptions = "File not found";
             System.out.println("File not found");
             return;
         }
@@ -101,6 +114,7 @@ public class BGE {
             }
             br.close();
         } catch (IOException e) {
+            testExeptions = "Error reading file";
             System.out.println("Error reading file");
         }
 
@@ -115,10 +129,12 @@ public class BGE {
                 if (p.getDate().isAfter(todayDate.minus(1, java.time.temporal.ChronoUnit.YEARS))) {
                     System.out.println("(kund)");
                     System.out.println(p.getName() + " är en nuvarande medlem");
+                    testLatestAuthorized = "kund";
                     ptPrint(p);
                 } else {
                     System.out.println("(fd. kund)");
                     System.out.println(p.getName() + " är en före detta kund");
+                    testLatestAuthorized = "fd. kund";
                 }
                 found = true;
             }
@@ -126,6 +142,7 @@ public class BGE {
         if (!found) {
             System.out.println("(obehörig)");
             System.out.println("Personen finns inte i filen och har sålunda aldrig varit medlem och är obehörig.");
+            testLatestAuthorized = "obehörig";
         }
 
 
@@ -134,10 +151,11 @@ public class BGE {
 
     public void ptPrint(Person p) {
         try {
-            FileWriter fw = new FileWriter("./inlamning2/src/ptData.txt", true);
+            FileWriter fw = new FileWriter("./src/ptData.txt", true);
             fw.write(p.getName() + ", " + p.getpNumber() + ", " + todayDateTime.format(DateTimeFormatter.ofPattern("HH:mm yyyy-MM-dd")) + "\n");
             fw.close();
         } catch (IOException e) {
+            testExeptions = "Error writing to file";
             System.out.println("Error writing to file");
         }
     }

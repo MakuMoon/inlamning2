@@ -117,7 +117,7 @@ public class BGETest {
         FileReader fr;
         String lastLine = null;
         try {
-            fr = new FileReader("./inlamning2/src/ptData.txt");
+            fr = new FileReader("./src/ptData.txt");
             BufferedReader br = new BufferedReader(fr);
             
             String currentLine;
@@ -132,6 +132,49 @@ public class BGETest {
             fail("Test failed due to file read error"); 
         }
         return lastLine;
+    }
+
+    @Test
+    public void testCorrectAuthority(){
+
+        BGE bge = new BGE("Greger Ganache");
+        String testLatestAuthorized = bge.getTestLatestAuthority();
+        assertEquals("kund", testLatestAuthorized, "incorrect authority (kund)");
+
+        bge = new BGE("Bear Belle");
+        testLatestAuthorized = bge.getTestLatestAuthority();
+        assertEquals("fd. kund", testLatestAuthorized, "incorrect authority (fd. kund)");
+
+        bge = new BGE("Ble");
+        testLatestAuthorized = bge.getTestLatestAuthority();
+        assertEquals("obehörig", testLatestAuthorized, "incorrect authority (obehörig)");
+        
+        bge = new BGE(7703021234L);
+        testLatestAuthorized = bge.getTestLatestAuthority();
+        assertEquals("kund", testLatestAuthorized, "incorrect authority (kund)");
+        
+        bge = new BGE(7605021234L);
+        testLatestAuthorized = bge.getTestLatestAuthority();
+        assertEquals("fd. kund", testLatestAuthorized, "incorrect authority (fd. kund)");
+
+        bge = new BGE(1234567890L);
+        testLatestAuthorized = bge.getTestLatestAuthority();
+        assertEquals("obehörig", testLatestAuthorized, "incorrect authority (obehörig)");
+
+    }
+
+    @Test
+    public void testExeptions(){
+        BGE bge = new BGE("");
+        String testExeptions = bge.getTestExeptions();
+        assertEquals(null, testExeptions, "incorrect exeption (File not found)");
+
+        bge = new BGE("Alhambra Aromes");
+        testExeptions = bge.getTestExeptions();
+        assertEquals(null, testExeptions, "incorrect exeption (Error writing file)");
+
+
+
     }
 
     @Test
