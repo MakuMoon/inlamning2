@@ -10,6 +10,8 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.time.LocalDate;
+
 
 
 public class BGETest {
@@ -26,7 +28,7 @@ public class BGETest {
         setMembers();
 
         Boolean testFound = false;
-        String falseName = "null";
+        String falseName = null;
 
         for (Person p : members) {
             BGE bgeTest = new BGE(p.getName());
@@ -137,27 +139,37 @@ public class BGETest {
     @Test
     public void testCorrectAuthority(){
 
-        BGE bge = new BGE("Greger Ganache");
+        ArrayList<Person> members = new ArrayList<Person>();
+
+        LocalDate todayDate = LocalDate.now();
+
+        Person yesterday = new Person("Yester", 4365785675L, todayDate.minus(1, java.time.temporal.ChronoUnit.DAYS));
+        Person yesteryear = new Person("Yearter", 4665735670L, todayDate.minus(1, java.time.temporal.ChronoUnit.YEARS).minus(1, java.time.temporal.ChronoUnit.DAYS));
+
+        members.add(yesterday);
+        members.add(yesteryear);
+
+        BGE bge = new BGE(members.get(0).getName(), members);
         String testLatestAuthorized = bge.getTestLatestAuthority();
         assertEquals("kund", testLatestAuthorized, "incorrect authority (kund)");
 
-        bge = new BGE("Bear Belle");
+        bge = new BGE(members.get(1).getName(), members);
         testLatestAuthorized = bge.getTestLatestAuthority();
         assertEquals("fd. kund", testLatestAuthorized, "incorrect authority (fd. kund)");
 
-        bge = new BGE("Ble");
+        bge = new BGE("", members);
         testLatestAuthorized = bge.getTestLatestAuthority();
         assertEquals("obehörig", testLatestAuthorized, "incorrect authority (obehörig)");
         
-        bge = new BGE(7703021234L);
+        bge = new BGE(4365785675L, members);
         testLatestAuthorized = bge.getTestLatestAuthority();
         assertEquals("kund", testLatestAuthorized, "incorrect authority (kund)");
         
-        bge = new BGE(7605021234L);
+        bge = new BGE(4665735670L, members);
         testLatestAuthorized = bge.getTestLatestAuthority();
         assertEquals("fd. kund", testLatestAuthorized, "incorrect authority (fd. kund)");
 
-        bge = new BGE(1234567890L);
+        bge = new BGE(1234567890L, members);
         testLatestAuthorized = bge.getTestLatestAuthority();
         assertEquals("obehörig", testLatestAuthorized, "incorrect authority (obehörig)");
 

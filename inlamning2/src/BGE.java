@@ -39,6 +39,16 @@ public class BGE {
         testFound = runPNumber(pNumber);
     }
 
+    public BGE(String name, ArrayList<Person> newMembers) {
+        members = newMembers;
+        testFound = searchPerson(name);
+    }
+
+    public BGE(long pNumber, ArrayList<Person> newMembers) {
+        members = newMembers;
+        testFound = searchPerson(String.valueOf(pNumber));
+    }
+
     public static void main(String[] args) {
         BGE bge = new BGE();
     }
